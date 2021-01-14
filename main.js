@@ -43,7 +43,7 @@ mainWindow.webContents.session.webRequest.onBeforeRequest(UrlFilter, (details, c
     //console.log('onBeforeRequest details', details);
     console.log(details.url);
     const { url } = details;
-    const localURL = url.replace(details.url, 'http://abramishvili.net' )
+    const localURL = url.replace(details.url, 'http://localhost' )
 
     callback({
         cancel: false,
