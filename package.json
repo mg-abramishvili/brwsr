@@ -1,5 +1,5 @@
 {
-  "name": "www_test",
+  "name": "www_browser",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^11.2.0"
+  },
+  "dependencies": {
+    "open": "^7.3.1"
   }
 }
