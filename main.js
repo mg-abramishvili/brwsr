@@ -7,6 +7,15 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+const axios = require('axios');
+
+function getLeagues () {
+    return axios.get('http://localhost/api/links')
+    .then(response => {
+      return response.data
+    })
+  }
+
 let mainWindow
 
 function createWindow () {
@@ -39,21 +48,27 @@ app.on('web-contents-created', (_event, contents) => {
     contents.on('will-navigate', (e, urlLink) => {
         //console.log(urlLink);
 
-        const whitelist = [ "https://www.exler.ru/blog", "google.com", "google.ru" ];
+        //console.log(whitelist)
 
-        let redirect = false;
-        for(let it of whitelist){
-          if(urlLink.match(it)){
-              redirect = false;
-              break;
-          }else{
-              redirect = true;
-          }
-        }
+        getLeagues().then(response => {
+            const whitelist = response;
         
-        if(redirect)
-            //console.log("redirect");
-            mainWindow.loadURL('https://google.com');
+
+            let redirect = false;
+            for(let it of whitelist){
+            if(urlLink.match(it)){
+                redirect = false;
+                break;
+            }else{
+                redirect = true;
+            }
+            }
+            
+            if(redirect)
+                //console.log("redirect");
+                mainWindow.loadURL('https://google.com');
+
+        });
     });
 });
 
