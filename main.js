@@ -8,13 +8,18 @@ const path = require('path')
 const url = require('url')
 
 const axios = require('axios');
+const fs = require("fs")
 
-function getLeagues () {
-    return axios.get('http://localhost/api/links')
-    .then(response => {
-      return response.data
-    })
-  }
+axios.get('http://localhost/api/links')
+.then(response => {
+    //console.log(response.data)
+    fs.writeFile('whitelist.json', JSON.stringify(response.data), function (err) {
+        //console.log(err);
+    });
+})
+
+let rawdata = fs.readFileSync('whitelist.json');
+let whitelist = JSON.parse(rawdata);
 
 let mainWindow
 
@@ -46,29 +51,21 @@ app.on('ready', createWindow)
 
 app.on('web-contents-created', (_event, contents) => {
     contents.on('will-navigate', (e, urlLink) => {
-        //console.log(urlLink);
 
-        //console.log(whitelist)
+        let redirect = false;
 
-        getLeagues().then(response => {
-            const whitelist = response;
-        
-
-            let redirect = false;
-            for(let it of whitelist){
-            if(urlLink.match(it)){
+        for(let it of whitelist) {
+            if(urlLink.match(it)) {
                 redirect = false;
                 break;
-            }else{
+            } else {
                 redirect = true;
             }
-            }
-            
-            if(redirect)
-                //console.log("redirect");
-                mainWindow.loadURL('https://google.com');
-
-        });
+        }
+        
+        if(redirect)
+            //console.log("redirect");
+            mainWindow.loadURL('https://google.com');
     });
 });
 
