@@ -27,8 +27,8 @@ function createWindow () {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
-        frame: true,
-        fullscreen: false,
+        frame: false,
+        fullscreen: true,
         type: module,
         webPreferences: {
             devTools: true,
