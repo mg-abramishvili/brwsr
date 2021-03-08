@@ -37,8 +37,8 @@ function createWindow () {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
-        //frame: false,
-        //fullscreen: true,
+        frame: false,
+        fullscreen: true,
         type: module,
         webPreferences: {
             devTools: true,
@@ -73,19 +73,19 @@ app.on('web-contents-created', (_event, contents) => {
             }
         }*/
 
-        for(let itdomains of whitelistdomains) {
-            for(let itlinks of whitelistlinks) {
-
-                if(urlLink.match(itdomains)) {
-                    redirect = false;
-                    break;
-                } else if(urlLink.match(itlinks)) {
-                    redirect = false;
-                    break;
-                } else {
-                    redirect = true;
+        for(let itd of whitelistdomains) {
+            if(urlLink.match(itd)) {
+                redirect = false;
+                break;
+            } else {
+                for(let itl of whitelistlinks) {
+                    if(urlLink == itl) {
+                        redirect = false;
+                        break;
+                    } else {
+                        redirect = true;
+                    }
                 }
-
             }
         }
         
