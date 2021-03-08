@@ -13,13 +13,23 @@ const fs = require("fs")
 axios.get('http://localhost/api/links')
 .then(response => {
     //console.log(response.data)
-    fs.writeFile('whitelist.json', JSON.stringify(response.data), function (err) {
+    fs.writeFile('whitelistlinks.json', JSON.stringify(response.data), function (err) {
         //console.log(err);
     });
 })
 
-let rawdata = fs.readFileSync('whitelist.json');
-let whitelist = JSON.parse(rawdata);
+axios.get('http://localhost/api/domains')
+.then(response => {
+    //console.log(response.data)
+    fs.writeFile('whitelistdomains.json', JSON.stringify(response.data), function (err) {
+        //console.log(err);
+    });
+})
+
+let rawdatalinks = fs.readFileSync('whitelistlinks.json');
+let whitelistlinks = JSON.parse(rawdatalinks);
+let rawdatadomains = fs.readFileSync('whitelistdomains.json');
+let whitelistdomains = JSON.parse(rawdatadomains);
 
 let mainWindow
 
@@ -27,8 +37,8 @@ function createWindow () {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
-        frame: false,
-        fullscreen: true,
+        //frame: false,
+        //fullscreen: true,
         type: module,
         webPreferences: {
             devTools: true,
@@ -54,12 +64,28 @@ app.on('web-contents-created', (_event, contents) => {
 
         let redirect = false;
 
-        for(let it of whitelist) {
+        /*for(let it of whitelist) {
             if(urlLink.match(it)) {
                 redirect = false;
                 break;
             } else {
                 redirect = true;
+            }
+        }*/
+
+        for(let itdomains of whitelistdomains) {
+            for(let itlinks of whitelistlinks) {
+
+                if(urlLink.match(itdomains)) {
+                    redirect = false;
+                    break;
+                } else if(urlLink.match(itlinks)) {
+                    redirect = false;
+                    break;
+                } else {
+                    redirect = true;
+                }
+
             }
         }
         
