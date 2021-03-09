@@ -74,8 +74,63 @@ app.on('web-contents-created', (_event, contents) => {
 
         contents.on('new-window', (e, url) => {
             e.preventDefault()
+            let redirect = false;
             mainWindow.loadURL(url);
-        })
+            let downloads = [
+                '.zip',
+                '.rar',
+                '.7z',
+                '.mp4',
+                '.wmv',
+                '.mkv',
+                '.avi',
+                '.mp3',
+                '.wav',
+                '.ogg',
+                '.xls',
+                '.xlsx',
+                '.doc',
+                '.docx',
+                '.ppt',
+                '.pptx',
+                '.jpg',
+                '.jpeg',
+                '.png',
+                '.tiff',
+                '.bmp',
+                '.gif',
+                '.fb2',
+                '.epub',
+                '.rtf',
+            ]
+    
+            for(let dl of downloads) {
+                if(url.match(dl)) {
+                    e.preventDefault()
+                } else {
+                    for(let itd of whitelistdomains) {
+                        if(url.match(itd)) {
+                            redirect = false;
+                            break;
+                        } else {
+                            for(let itl of whitelistlinks) {
+                                if(url == itl) {
+                                    redirect = false;
+                                    break;
+                                } else {
+                                    redirect = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if(redirect)
+                for(let hp of homepage) {
+                    mainWindow.loadURL(hp);
+                }
+        });
 
         let redirect = false;
 
