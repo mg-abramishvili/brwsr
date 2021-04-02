@@ -3,7 +3,7 @@ const session = electron.session;
 
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
-
+const Menu = electron.Menu
 const path = require('path')
 const url = require('url')
 
@@ -54,7 +54,15 @@ function createWindow () {
             nodeIntegration: false,
             contextIsolation: false
         }
-    });
+    })
+    const template = [
+        {
+            label: 'Admin Panel', click () { mainWindow.loadURL('http://localhost/login'); },
+            accelerator: 'Ctrl+Q'
+        }
+    ]
+	const menu = Menu.buildFromTemplate (template)
+    Menu.setApplicationMenu (menu);
 
     //mainWindow.webContents.openDevTools();
 
